@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+	<title></title>
+	<meta name="generator" content="LibreOffice 25.8.4.2 (Linux)"/>
+	<meta name="created" content="00:00:00"/>
+	<meta name="changed" content="00:00:00"/>
+	<style type="text/css">
+		@page { size: 8.27in 11.69in; margin: 0.79in }
+		p { margin-bottom: 0.1in; line-height: 115%; background: transparent }
+		pre { font-size: 10pt; font-family: "Liberation Mono", monospace; background: transparent }
+	</style>
+</head>
+<body lang="en-US" link="#000080" vlink="#800000" dir="ltr"><pre>&lt;!doctype html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;utf-8&quot; /&gt;
+  &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width,initial-scale=1&quot; /&gt;
+  &lt;title&gt;India Multi&#8209;Market Search — Instant&lt;/title&gt;
+  &lt;style&gt;
+    :root{--accent:#0b6efd;--bg:#f7f8fb;--card:#ffffff}
+    body{font-family:Inter,system-ui,Segoe UI,Arial,sans-serif;margin:0;background:var(--bg);color:#111}
+    .wrap{max-width:860px;margin:28px auto;padding:18px}
+    header{display:flex;align-items:center;gap:12px}
+    h1{font-size:18px;margin:0}
+    p.sub{margin:6px 0 18px;color:#444;font-size:13px}
+    .searchbox{display:flex;gap:8px}
+    input[type=&quot;search&quot;]{flex:1;padding:12px;border-radius:8px;border:1px solid #ddd;font-size:16px}
+    button{background:var(--accent);color:#fff;border:none;padding:11px 14px;border-radius:8px;font-weight:600}
+    .controls{margin-top:12px;display:flex;gap:8px;flex-wrap:wrap}
+    .grid{margin-top:14px;display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:8px}
+    .card{background:var(--card);padding:10px;border-radius:8px;border:1px solid #e7e7e7;display:flex;justify-content:space-between;align-items:center}
+    .card button{background:#f1f5fb;color:var(--accent);padding:8px;border-radius:6px;border:1px solid rgba(11,110,253,0.12);font-weight:600}
+    .small{font-size:12px;color:#666}
+    footer{margin-top:18px;font-size:12px;color:#666}
+    @media (max-width:420px){.grid{grid-template-columns:1fr}}
+  &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;div class=&quot;wrap&quot;&gt;
+    &lt;header&gt;
+      &lt;div&gt;
+        &lt;h1&gt;India Multi&#8209;Market Instant Search&lt;/h1&gt;
+        &lt;p class=&quot;sub&quot;&gt;Type a product name and open search results across India’s top marketplaces (no login).&lt;/p&gt;
+      &lt;/div&gt;
+    &lt;/header&gt;
+
+    &lt;div class=&quot;searchbox&quot;&gt;
+      &lt;input id=&quot;q&quot; type=&quot;search&quot; placeholder=&quot;e.g. Cornetto Double Chocolate 781001&quot; /&gt;
+      &lt;button id=&quot;go&quot;&gt;Search&lt;/button&gt;
+    &lt;/div&gt;
+
+    &lt;div class=&quot;controls&quot;&gt;
+      &lt;button id=&quot;openAll&quot;&gt;Open all (multiple tabs)&lt;/button&gt;
+      &lt;button id=&quot;copyAll&quot;&gt;Copy all links&lt;/button&gt;
+      &lt;div style=&quot;flex:1&quot;&gt;&lt;/div&gt;
+      &lt;div class=&quot;small&quot;&gt;Maps search to 40+ marketplaces (mobile &amp; desktop)&lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;div id=&quot;results&quot; class=&quot;grid&quot; aria-live=&quot;polite&quot; style=&quot;margin-top:12px&quot;&gt;&lt;/div&gt;
+
+    &lt;footer&gt;
+      Tip: allow popups if you want &quot;Open all&quot; to open multiple tabs. This tool generates search URLs only; availability/prices shown on marketplaces are live there.
+    &lt;/footer&gt;
+  &lt;/div&gt;
+
+  &lt;script&gt;
+    // Marketplace list and search URL patterns (India)
+    const M = [
+      [&quot;Amazon India&quot;,&quot;https://www.amazon.in/s?k=%s&quot;],
+      [&quot;Flipkart&quot;,&quot;https://www.flipkart.com/search?q=%s&quot;],
+      [&quot;Myntra&quot;,&quot;https://www.myntra.com/search?q=%s&quot;],
+      [&quot;Ajio&quot;,&quot;https://www.ajio.com/search/?text=%s&quot;],
+      [&quot;Tata CLiQ&quot;,&quot;https://www.tatacliq.com/search/?text=%s&quot;],
+      [&quot;Croma&quot;,&quot;https://www.croma.com/search/?text=%s&quot;],
+      [&quot;Reliance Digital&quot;,&quot;https://www.reliancedigital.in/search?q=%s&quot;],
+      [&quot;BigBasket&quot;,&quot;https://www.bigbasket.com/ps/?q=%s&quot;],
+      [&quot;Zepto&quot;,&quot;https://www.zepto.com/search?q=%s&quot;],
+      [&quot;Blinkit&quot;,&quot;https://www.blinkit.com/search?q=%s&quot;],
+      [&quot;Swiggy Instamart&quot;,&quot;https://www.swiggy.com/search?q=%s&quot;],
+      [&quot;StarQuik&quot;,&quot;https://www.starquik.com/search?query=%s&quot;],
+      [&quot;Dunzo&quot;,&quot;https://www.dunzo.com/search?q=%s&quot;],
+      [&quot;BB Now (flash)&quot;,&quot;https://www.bigbasket.com/ps/?q=%s&quot;],
+      [&quot;Snapdeal&quot;,&quot;https://www.snapdeal.com/search?keyword=%s&quot;],
+      [&quot;Meesho&quot;,&quot;https://www.meesho.com/search?q=%s&quot;],
+      [&quot;Paytm Mall&quot;,&quot;https://paytmmall.com/shop/search?q=%s&quot;],
+      [&quot;ShopClues&quot;,&quot;https://www.shopclues.com/search?q=%s&quot;],
+      [&quot;Nykaa&quot;,&quot;https://www.nykaa.com/search/result?q=%s&quot;],
+      [&quot;JioMart&quot;,&quot;https://www.jiomart.com/catalog/?text=%s&quot;],
+      [&quot;FirstCry&quot;,&quot;https://www.firstcry.com/search?q=%s&quot;],
+      [&quot;Pepperfry&quot;,&quot;https://www.pepperfry.com/site_product/search?q=%s&quot;],
+      [&quot;Limeroad&quot;,&quot;https://www.limeroad.com/search?q=%s&quot;],
+      [&quot;IndiaMART&quot;,&quot;https://dir.indiamart.com/search.mp?ss=%s&quot;],
+      [&quot;Paytm&quot;,&quot;https://paytm.com/search?q=%s&quot;],
+      [&quot;Shopsy&quot;,&quot;https://www.shopsy.in/search?q=%s&quot;],
+      [&quot;Decathlon&quot;,&quot;https://www.decathlon.in/search?search=%s&quot;],
+      [&quot;PharmEasy&quot;,&quot;https://pharmeasy.in/search/all?name=%s&quot;],
+      [&quot;Netmeds&quot;,&quot;https://www.netmeds.com/catalogsearch/result?q=%s&quot;],
+      [&quot;1mg&quot;,&quot;https://www.1mg.com/search/all?name=%s&quot;],
+      [&quot;Lenskart&quot;,&quot;https://www.lenskart.com/search/?search_query=%s&quot;],
+      [&quot;Clovia&quot;,&quot;https://www.clovia.com/search?type=product&amp;q=%s&quot;],
+      [&quot;Zivame&quot;,&quot;https://www.zivame.com/search?query=%s&quot;],
+      [&quot;Urban Ladder&quot;,&quot;https://www.urbanladder.com/search/?q=%s&quot;],
+      [&quot;Wakefit&quot;,&quot;https://www.wakefit.co/search?q=%s&quot;],
+      [&quot;Boat&quot;,&quot;https://www.boat-lifestyle.com/search?q=%s&quot;],
+      [&quot;TataCLiQ Fashion&quot;,&quot;https://www.tatacliq.com/search/?text=%s&quot;],
+      [&quot;Hamleys&quot;,&quot;https://www.hamleys.in/search?q=%s&quot;],
+      [&quot;Crossword&quot;,&quot;https://www.crossword.in/search?q=%s&quot;],
+      [&quot;OLX&quot;,&quot;https://www.olx.in/items/q-%s&quot;],
+      [&quot;Quikr&quot;,&quot;https://www.quikr.com/search?q=%s&quot;],
+      [&quot;Etsy India&quot;,&quot;https://www.etsy.com/in-en/search?q=%s&quot;],
+      [&quot;Alibaba&quot;,&quot;https://www.alibaba.com/trade/search?SearchText=%s&quot;]
+    ];
+
+    const results = document.getElementById('results');
+    const q = document.getElementById('q');
+    const go = document.getElementById('go');
+    const openAll = document.getElementById('openAll');
+    const copyAll = document.getElementById('copyAll');
+
+    function encode(qs){
+      return encodeURIComponent(qs.trim()).replace(/%20/g, &quot;+&quot;);
+    }
+
+    function buildGrid(query){
+      results.innerHTML = '';
+      const term = query.trim();
+      if(!term) { results.innerHTML = '&lt;div class=&quot;small&quot;&gt;Type a product name to get marketplace links.&lt;/div&gt;'; return; }
+      const enc = encode(term);
+      M.forEach(([name, pattern])=&gt;{
+        const url = pattern.replace('%s', enc);
+        const card = document.createElement('div');
+        card.className = 'card';
+        const left = document.createElement('div');
+        left.innerHTML = '&lt;div style=&quot;font-weight:600&quot;&gt;'+name+'&lt;/div&gt;&lt;div class=&quot;small&quot;&gt;'+url.replace(/(https?:\/\/[^/]+).*/,'$1')+'&lt;/div&gt;';
+        const btn = document.createElement('button');
+        btn.textContent = 'Open';
+        btn.onclick = ()=&gt; window.open(url, '_blank');
+        card.appendChild(left);
+        card.appendChild(btn);
+        results.appendChild(card);
+      });
+    }
+
+    go.addEventListener('click', ()=&gt; buildGrid(q.value));
+    q.addEventListener('keydown', (e)=&gt; { if(e.key==='Enter') buildGrid(q.value); });
+
+    openAll.addEventListener('click', ()=&gt;{
+      const term = q.value.trim();
+      if(!term){ alert('Type a product first'); return; }
+      const enc = encode(term);
+      let count = 0;
+      M.forEach(([name, pattern])=&gt;{
+        const url = pattern.replace('%s', enc);
+        window.open(url, '_blank');
+        count++;
+      });
+      if(count===0) alert('No marketplaces configured.');
+    });
+
+    copyAll.addEventListener('click', ()=&gt;{
+      const term = q.value.trim();
+      if(!term){ alert('Type a product first'); return; }
+      const enc = encode(term);
+      const lines = M.map(([name,pattern]) =&gt; pattern.replace('%s', enc));
+      navigator.clipboard.writeText(lines.join('\n')).then(()=&gt; alert('All links copied to clipboard.'));
+    });
+
+    // initial hint
+    buildGrid('');
+  &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+</body>
+</html>
